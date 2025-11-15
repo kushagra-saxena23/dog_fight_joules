@@ -1,13 +1,20 @@
-from ships import Interceptor, Bomber, Fighter
+from ursina import *
 
-class Enemy:
-    def __init__(self, ship_class_name):
-        if ship_class_name == "Interceptor":
-            self.ship = Interceptor()
-        elif ship_class_name == "Bomber":
-            self.ship = Bomber()
-        else: # Default to Fighter
-            self.ship = Fighter()
+class Enemy(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.model = 'sphere'
+        self.color = color.red
+        self.scale = 3
+        self.original_color = self.color
 
-        self.health = self.ship.base_health
-        self.shields = self.ship.base_shields
+    def update(self):
+        # Check if we have been hit by a projectile
+        hit_info = self.intersects()
+        if hit_info.hit:
+            if "projectile" in hit_info.entity.name: # A simple way to check if it's a projectile
+                self.color = color.orange
+                invoke(self.reset_color, delay=0.1)
+
+    def reset_color(self):
+        self.color = self.original_color
