@@ -8,11 +8,11 @@ def main():
     # Create the space background
     Sky(texture='sky_default')
 
-    # Create a reliable, built-in flight controller
-    # The user will fly from a first-person perspective
+    # Create a reliable, built-in flight controller with gravity disabled
     player = FirstPersonController(
         position=(0, 5, -10),
-        speed=50
+        speed=50,
+        gravity=0  # Disable gravity for space flight
     )
     # Attach a simple model to the controller to represent our "ship"
     ship_model = Entity(parent=player, model='cube', scale=(1, 0.5, 2), color=color.white, position=(0, -1, 0))
@@ -30,8 +30,8 @@ def main():
     stunt_meter_bg = Entity(parent=camera.ui, model='quad', scale=(.5, .02), position=(0, -.45), color=color.dark_gray)
     stunt_meter = Entity(parent=camera.ui, model='quad', scale=(0, .02), position=(-.25, -.45), color=color.cyan)
 
-    # Add on-screen control instructions
-    Text("WASD to Move | Mouse to Look",
+    # Add final on-screen control instructions
+    Text("Click Window to Start | WASD to Move | Mouse to Look",
          position=window.bottom_left + (0.01, 0.01),
          origin=(-0.5, -0.5),
          scale=1)
