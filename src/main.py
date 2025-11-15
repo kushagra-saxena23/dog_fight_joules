@@ -1,5 +1,4 @@
 from ursina import *
-import os
 
 # Define a simple player ship class
 class PlayerShip(Entity):
@@ -13,13 +12,14 @@ class PlayerShip(Entity):
         self.speed = 50
 
     def update(self):
-        # This function is called every frame
-        # In a real game, this is where controls would be checked
+        # This function is called every frame and handles player controls
+        # Move the ship
         self.x += held_keys['d'] * time.dt * self.speed
         self.x -= held_keys['a'] * time.dt * self.speed
         self.y += held_keys['w'] * time.dt * self.speed
         self.y -= held_keys['s'] * time.dt * self.speed
 
+        # Rotate the ship with the mouse and keys
         self.rotation_x -= mouse.velocity[1] * 200 * time.dt
         self.rotation_y += mouse.velocity[0] * 200 * time.dt
         self.rotation_z -= held_keys['q'] * 100 * time.dt
@@ -27,19 +27,8 @@ class PlayerShip(Entity):
 
 
 def main():
-    # Define the screenshot path
-    screenshot_path = 'screenshots/04_stunt_meter_ui.png'
-
-    # Ensure the screenshots directory exists
-    if not os.path.exists('screenshots'):
-        os.makedirs('screenshots')
-
-    # Manually remove the old screenshot if it exists
-    if os.path.exists(screenshot_path):
-        os.remove(screenshot_path)
-
-    # Initialize Ursina
-    app = Ursina(window_type='offscreen', development_mode=False, borderless=False)
+    # Initialize Ursina in standard windowed mode
+    app = Ursina()
 
     # Create the space background
     Sky(texture='sky_default')
@@ -57,7 +46,6 @@ def main():
 
     # Create the Stunt Meter UI
     stunt_meter_bg = Entity(parent=camera.ui, model='quad', scale=(.5, .02), position=(0, -.45), color=color.dark_gray)
-    # This is the bar that would fill up. We'll show it empty for now.
     stunt_meter = Entity(parent=camera.ui, model='quad', scale=(0, .02), position=(-.25, -.45), color=color.cyan)
 
 
@@ -65,17 +53,12 @@ def main():
     camera.position = (0, 10, -30)
     camera.look_at(player)
 
-    # Add a title
+    # Add a title to the window
     window.title = "Aces in the Void: Strikeforce"
 
-    # Render a frame
-    app.step()
+    # Start the game loop
+    app.run()
 
-    # Capture and quit
-    print("Capturing screenshot...")
-    base.screenshot(namePrefix=screenshot_path, defaultFilename=0)
-    print("Screenshot saved.")
-    application.quit()
 
 if __name__ == '__main__':
     main()
